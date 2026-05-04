@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="weather-display" id="weatherDisplay">
+      <div class="weather-overlay"></div>
+      <div class="header">
+        <h1><span class="emoji">🌦️</span> <span class="title-text">WeatherX</span></h1>
+      </div>
+      <div class="weather-info">
+        <h2 id="cityName">Enter a city to start</h2>
+        <h3 id="result"></h3>
+      </div>
+    </div>
+
+    <div class="city-marquee">
+      <div class="marquee-content">
+        <span onclick="searchCity('Dubai')">Dubai</span><span class="dot">•</span>
+        <span onclick="searchCity('Singapore')">Singapore</span><span class="dot">•</span>
+        <span onclick="searchCity('London')">London</span><span class="dot">•</span>
+        <span onclick="searchCity('New York')">New York</span><span class="dot">•</span>
+        <span onclick="searchCity('Tokyo')">Tokyo</span><span class="dot">•</span>
+        <span onclick="searchCity('Paris')">Paris</span><span class="dot">•</span>
+        <span onclick="searchCity('Sydney')">Sydney</span><span class="dot">•</span>
+        <span onclick="searchCity('Toronto')">Toronto</span><span class="dot">•</span>
+        <span onclick="searchCity('Chennai')">Chennai</span><span class="dot">•</span>
+        <span onclick="searchCity('Mumbai')">Mumbai</span><span class="dot">•</span>
+        <span onclick="searchCity('New Delhi')">New Delhi</span><span class="dot">•</span>
+        <span onclick="searchCity('Kolkata')">Kolkata</span><span class="dot">•</span>
+        <span onclick="searchCity('Hyderabad')">Hyderabad</span><span class="dot">•</span>
+        <span onclick="searchCity('Bangalore')">Bangalore</span><span class="dot">•</span>
+        <!-- duplicate for seamless scrolling -->
+        <span onclick="searchCity('Dubai')">Dubai</span><span class="dot">•</span>
+        <span onclick="searchCity('Singapore')">Singapore</span><span class="dot">•</span>
+        <span onclick="searchCity('London')">London</span><span class="dot">•</span>
+        <span onclick="searchCity('New York')">New York</span><span class="dot">•</span>
+        <span onclick="searchCity('Tokyo')">Tokyo</span><span class="dot">•</span>
+        <span onclick="searchCity('Paris')">Paris</span><span class="dot">•</span>
+        <span onclick="searchCity('Sydney')">Sydney</span><span class="dot">•</span>
+        <span onclick="searchCity('Toronto')">Toronto</span><span class="dot">•</span>
+        <span onclick="searchCity('Chennai')">Chennai</span><span class="dot">•</span>
+        <span onclick="searchCity('Mumbai')">Mumbai</span><span class="dot">•</span>
+        <span onclick="searchCity('New Delhi')">New Delhi</span><span class="dot">•</span>
+        <span onclick="searchCity('Kolkata')">Kolkata</span><span class="dot">•</span>
+        <span onclick="searchCity('Hyderabad')">Hyderabad</span><span class="dot">•</span>
+        <span onclick="searchCity('Bangalore')">Bangalore</span>
+      </div>
+    </div>
+
+    <div class="search-container">
+      <input type="text" id="city" placeholder="Enter city" />
+      <button onclick="getWeather()">Get Weather</button>
+    </div>
+
+    <script>
+      function searchCity(cityName) {
+        document.getElementById("city").value = cityName;
+        getWeather();
+      }
+
+      const weatherImages = {
+        Clear: "weather_images/clear.jpg",
+        Clouds: "weather_images/Clouds.jpg",
+        Rain: "weather_images/Rain.jpg",
+        Drizzle: "weather_images/Rain.jpg",
+        Thunderstorm: "weather_images/Thunderstorm.jpg",
+        Snow: "weather_images/Snow.jpg",
+        Mist: "weather_images/Fog.jpg",
+        Smoke: "weather_images/Fog.jpg",
+        Haze: "weather_images/Fog.jpg",
+        Dust: "weather_images/Fog.jpg",
+        Fog: "weather_images/Fog.jpg",
+        Ash: "weather_images/Fog.jpg",
+        Squall: "weather_images/Thunderstorm.jpg",
+        Tornado: "weather_images/Thunderstorm.jpg"
+      };
+
+      async function getWeather() {
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+
+        const city = document.getElementById("city").value;
+        const apiKey = "ad0b1d8216db014d4d30274f7a542180";
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+
+          if (data.cod !== 200) {
+            document.getElementById("cityName").innerText = "Not Found";
+            document.getElementById("result").innerText = "Please check the city name.";
+            return;
+          }
+
+          const temp = data.main.temp;
+          const weatherDesc = data.weather[0].description;
+          const mainWeather = data.weather[0].main;
+
+          document.getElementById("cityName").innerText = data.name;
+          document.getElementById("result").innerText = `🌡️ ${temp}°C | ${weatherDesc}`;
+
+          const bgUrl = weatherImages[mainWeather] || "weather_images/clear.jpg";
+          document.getElementById('weatherDisplay').style.backgroundImage = `url('${bgUrl}')`;
+        } catch (error) {
+          document.getElementById("cityName").innerText = "Error!";
+          document.getElementById("result").innerText = "Error fetching weather data.";
+        }
+      }
+    </script>
+  </body>
+</html>
